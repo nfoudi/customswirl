@@ -7,6 +7,7 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -18,6 +19,9 @@ public final class SwirlView extends ImageView {
     ON,
     ERROR,
   }
+
+  Integer errorColor;
+  Integer swirlColor;
 
   private State state = State.OFF;
 
@@ -39,6 +43,18 @@ public final class SwirlView extends ImageView {
     }
     a.recycle();
   }
+  public void setErrorIconColor(int color) {
+    this.errorColor = color;
+  }
+
+  public void setSwirlIconColor(int color) {
+    this.swirlColor = color;
+  }
+
+  public void resetColors() {
+    this.errorColor = null;
+    this.swirlColor = null;
+  }
 
   public void setState(State state) {
     setState(state, true);
@@ -52,6 +68,15 @@ public final class SwirlView extends ImageView {
       setImageResource(resId);
     } else {
       Drawable icon = getContext().getDrawable(resId);
+      if (state == State.ERROR && icon != null && errorColor != null) {
+        Drawable mutatedIcon = DrawableCompat.wrap(icon).mutate();
+        DrawableCompat.setTint(mutatedIcon, errorColor);
+        icon = DrawableCompat.unwrap(mutatedIcon);
+      } else if (state == State.ON && icon != null && swirlColor != null) {
+        Drawable mutatedIcon = DrawableCompat.wrap(icon).mutate();
+        DrawableCompat.setTint(mutatedIcon, swirlColor);
+        icon = DrawableCompat.unwrap(mutatedIcon);
+      }
       setImageDrawable(icon);
 
       if (icon instanceof AnimatedVectorDrawable) {
