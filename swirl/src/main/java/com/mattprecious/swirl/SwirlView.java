@@ -22,6 +22,7 @@ public final class SwirlView extends ImageView {
 
   Integer errorColor;
   Integer onColor;
+  Integer offColor;
 
   private State state = State.OFF;
 
@@ -43,17 +44,22 @@ public final class SwirlView extends ImageView {
     }
     a.recycle();
   }
-  public void setErrorIconColor(int color) {
+  public void setErrorColor(int color) {
     this.errorColor = color;
   }
 
-  public void setSwirlIconColor(int color) {
+  public void setOnColor(int color) {
     this.onColor = color;
+  }
+
+  public void setOffColor(int color) {
+    this.offColor = color;
   }
 
   public void resetColors() {
     this.errorColor = null;
     this.onColor = null;
+    this.offColor = null;
   }
 
   public void setState(State state) {
@@ -75,6 +81,10 @@ public final class SwirlView extends ImageView {
       } else if (state == State.ON && icon != null && onColor != null) {
         Drawable mutatedIcon = DrawableCompat.wrap(icon).mutate();
         DrawableCompat.setTint(mutatedIcon, onColor);
+        icon = DrawableCompat.unwrap(mutatedIcon);
+      } else if (state == State.OFF && icon != null && offColor != null) {
+        Drawable mutatedIcon = DrawableCompat.wrap(icon).mutate();
+        DrawableCompat.setTint(mutatedIcon, offColor);
         icon = DrawableCompat.unwrap(mutatedIcon);
       }
       setImageDrawable(icon);
